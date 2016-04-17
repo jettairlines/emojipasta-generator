@@ -19,14 +19,14 @@ def signup():
 
 	## initializers
 	stemmer = SnowballStemmer("english")
-	emojidata = pickle.load( open( "util/emoji_to_keywords.data", "rb" ) )
+	emojidata = pickle.load( open( "util/emoji.data", "rb" ) )
 	for emo,keys in emojidata.items():
 		keys += nltk.word_tokenize( emo.replace("_"," ") )
 		keys = [stemmer.stem(e) for e in keys]
 
 	## util functions
 	def makeEmo(emo):
-		return ":"+emo+":"
+		return emo
 
 	tokens = nltk.word_tokenize(textinput)
 	tokens_stem = [stemmer.stem(e) for e in tokens]
@@ -56,8 +56,8 @@ def signup():
 					tokens.insert(i+randint(0,2),emojilist[randint(0,len(emojilist)-1)])
 
 
-	textoutput = emoji.emojize(" ".join(tokens),use_aliases=True)
-	emojilist = emoji.emojize("".join(emojilist),use_aliases=True)
+	textoutput = " ".join(tokens)
+	emojilist = "".join(emojilist)
 	return render_template('index.html', emojilist= emojilist, textoutput = textoutput )
 
 if __name__ == "__main__":

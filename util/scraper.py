@@ -89,6 +89,7 @@ for link in possible_links:
 		td.find("a",recursive=False)
 		hex_emoji = td.getText()
 		hex_emoji = str.replace(str(hex_emoji),"U+","&#x").lower()
+		hex_emoji = str.replace(hex_emoji," ","")
 		print hex_emoji
 
 	possible_name_td = link.find_all('td',{ "class" : "name" })
@@ -102,7 +103,7 @@ for link in possible_links:
 				print "key %s appended %s" %(keyword.lower(),hex_emoji)
 				emojiDict[keyword.lower()].append(hex_emoji)
 			else:
-				print "creating new key %s and item %s" %(name.lower(),hex_emoji)
+				print "creating new key %s and item %s" %(keyword.lower(),hex_emoji)
 				emojiDict[keyword.lower()] = [hex_emoji]
 
 
