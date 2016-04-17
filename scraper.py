@@ -2,6 +2,7 @@ import numpy as np
 from lxml import html
 import requests
 from bs4 import BeautifulSoup
+import pickle
 
 links = []
 linksToScrape = ["http://www.iemoji.com/meanings-gallery/people","http://www.iemoji.com/meanings-gallery/places","http://www.iemoji.com/meanings-gallery/nature","http://www.iemoji.com/meanings-gallery/objects","http://www.iemoji.com/meanings-gallery/symbols","http://www.iemoji.com/meanings-gallery/new","http://www.iemoji.com/meanings-gallery/skin-tones"]
@@ -57,12 +58,19 @@ for link in links:
 
 	words = keywordsString.split(", ")
 	
+	name = name[1:-1]
+	print name
 	for word in words:
 		
 		f.write("%s,%s\n" %(word.encode('utf-8'),name.encode('utf-8')))
-		emojiDict[word] = name
+		if emojiDict.get(word) == None:
+			emojiDict[word] = [name]
+		else:
+			emojiDict[word].append(name)
 		
 
-				
+dataFile = open("emoji.data",'wb')
+pickle.dump(emojiDict,dataFile)
+dataFile.close()
 
 
