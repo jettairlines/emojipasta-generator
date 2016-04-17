@@ -65,13 +65,13 @@ def signup():
 				for j in range(0,randint(0,3)):
 					tokens.insert(i+randint(0,2),emojilist[randint(0,len(emojilist)-1)])
 
-   	# counts = Counter(emojilist).most_common(7);
-   	# print counts
+   	counts = Counter(emojilist).most_common(7);
+   	print counts[0][0]
 
 
 	textoutput = " ".join(tokens)
 	emojilist = " ".join(emojilist)
-	return render_template('index.html', emojilist= Markup(emojilist), textoutput = Markup(textoutput) )
+	return render_template('index.html', emojilist= Markup(counts), textoutput = Markup(textoutput) )
 
 if __name__ == "__main__":
 	application.debug = True
