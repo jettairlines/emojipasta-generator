@@ -5,13 +5,13 @@ import nltk
 from nltk.tokenize import RegexpTokenizer
 from nltk.stem import *
 from nltk.stem.snowball import SnowballStemmer
-app = Flask(__name__)
+application = Flask(__name__)
 
-@app.route("/")
+@application.route("/")
 def hello():
 	return render_template('index.html')
 
-@app.route('/', methods = ['POST'])
+@application.route('/', methods = ['POST'])
 def signup():
 	textinput = Markup("<p>"+request.form['textinput']+"</p>")
 
@@ -38,6 +38,6 @@ def signup():
 	return render_template('index.html', textoutput = Markup(textoutput) )
 
 if __name__ == "__main__":
-	app.run(debug=True)
+	application.run(host='0.0.0.0')
 
-app.secret_key = 'bush did 9/11'
+application.secret_key = 'bush did 9/11'
