@@ -18,16 +18,16 @@
 <body>
 	
 	<div class="container-fuild text-center">
-		<h1>Emoji Pasta<i class="em em-spaghetti"></i><i class="em em-spaghetti"></i><i class="em em-eyes"></i>Generator<i class="em em-sweat_drops"></i><i class="em em-sweat_drops"></i></h1>
+		<h1>&#x1f1ee &#x1F1E9 Emoji Pasta<i class="em em-spaghetti"></i><i class="em em-spaghetti"></i><i class="em em-eyes"></i>Generator<i class="em em-sweat_drops"></i><i class="em em-sweat_drops"></i></h1>
 		
-		<form action="/" method="POST" class="col-md-8 col-md-offset-2">
+		<form action="/" method="post" class="col-md-8 col-md-offset-2">
 			<textarea class="form-control" type="text" name="textinput" placeholder="place your text here"></textarea>
 			<button class="btn btn-lg btn-info" type="submit">SIGN ME THE F<i class="em em-eyes"></i>K UP</button>
 		</form>
 
-		<div class="col-md-6 col-md-offset-2">
-			{{ emojis }}
-	 		{{ textoutput }}
+		<div class="col-md-6 col-md-offset-3">
+			<h3>{{ emojilist }}</h3>
+	 		<p class="text-left">{{ textoutput }}</p>
 		</div>
 	</div>
 
