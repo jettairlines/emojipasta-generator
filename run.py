@@ -17,12 +17,15 @@ def hello():
 def signup():
 	textinput = request.form['textinput']
 
+	if not textinput: textinput = "@officialjaden How Can Mirrors Be Real If Our Eyes Aren't Real"
+
 	## initializers
 	stemmer = SnowballStemmer("english")
 	emojidata = pickle.load( open( "util/emoji.data", "rb" ) )
 	for emo,keys in emojidata.items():
 		keys += nltk.word_tokenize( emo.replace("_"," ") )
 		keys = [stemmer.stem(e) for e in keys]
+
 
 	## util functions
 	def ngrams(input, n):
@@ -55,27 +58,30 @@ def signup():
 								print "name %s" %name
 								print "emoji %s" %emo
 								emojilist.append(emo)
-						for j in range(0,randint(0,7)): 
+						for j in range(0,randint(1,5)): 
 							tokens.insert(i,emos[randint(0,len(emos)-1)]);
 
 
-	## more scrabling and funzies
-	if ngramz and len(textinput)<150:
+
+	if ngramz:
+		prob = (2 if len(tokens)>20 else 4)
 		for i,e in enumerate(tokens):
-			if(randint(0,420)>400):
+			if(randint(0,10)<prob):
 				tokens.insert(i+randint(0,2),ngramz[randint(0,len(ngramz)-1)])
 
 	if emojilist:
+		prob = (2 if len(tokens)>15 else 6)
 		for i,e in enumerate(tokens):
-			if(randint(0,420)>337):
+			if(randint(0,10)<3):
 				for j in range(0,randint(0,3)):
 					tokens.insert(i+randint(0,2),emojilist[randint(0,len(emojilist)-1)])
+
 
    	counts = Counter(emojilist).most_common(7);
    	counts = [ e[0] for e in counts ]
 
 	textoutput = " ".join(tokens)
-	emojilist = " ".join(emojilist)
+	counts = " ".join(counts)
 	return render_template('index.html', emojilist= Markup(counts), textoutput = Markup(textoutput) )
 
 if __name__ == "__main__":

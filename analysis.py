@@ -59,7 +59,7 @@ if emojilist:
 counts = Counter(emojilist).most_common(7);
 
 textoutput = " ".join(tokens)
-emojilist = " ".join(emojilist)
+emojilist = "".join(emojilist)
 
 # print emojilist
 # print textoutput
