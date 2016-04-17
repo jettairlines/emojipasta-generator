@@ -45,12 +45,17 @@ def signup():
 			syns = wn.synsets(inputword)
 			for syn in syns:
 				name = syn.name().split('.')[0]
-				emos = emojidata.get(name.lower())
-				if emos:
-					for emo in emos:
-						if emo not in emojilist: emojilist.append(emo)
-					for j in range(0,randint(0,7)): 
-						tokens.insert(i,emos[randint(0,len(emos)-1)]);
+				if emojidata.get(name.lower()) != None:
+					emos = emojidata[name.lower()][:-1]
+					if emos:
+						print emos
+						for emo in emos:
+							if emo not in emojilist: 
+								print "name %s" %name
+								print "emoji %s" %emo
+								emojilist.append(emo)
+						for j in range(0,randint(0,7)): 
+							tokens.insert(i,emos[randint(0,len(emos)-1)]);
 
 
 	## more scrabling and funzies
