@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 import pickle
 
 links = []
-linksToScrape = ["http://www.iemoji.com/meanings-gallery/people","http://www.iemoji.com/meanings-gallery/places","http://www.iemoji.com/meanings-gallery/nature","http://www.iemoji.com/meanings-gallery/objects","http://www.iemoji.com/meanings-gallery/symbols","http://www.iemoji.com/meanings-gallery/new","http://www.iemoji.com/meanings-gallery/skin-tones"]
+linksToScrape = ["http://www.iemoji.com/meanings-gallery/people","http://www.iemoji.com/meanings-gallery/places","http://www.iemoji.com/meanings-gallery/nature","http://www.iemoji.com/meanings-gallery/objects","http://www.iemoji.com/meanings-gallery/symbols","http://www.iemoji.com/meanings-gallery/new"]#,"http://www.iemoji.com/meanings-gallery/skin-tones"]
 for linkToScrape in linksToScrape:
 	page = requests.get(linkToScrape)
 	bs = BeautifulSoup(page.content,"lxml")
@@ -38,11 +38,15 @@ for link in links:
 				break
 			foundKeyword = True
 
-		if tag.getText() == "\"Short Code\" Name":
-			nameList = tag.find_next_siblings("td")[0]
-			if len(nameList) == 0:
-				break
-			name = nameList.contents[0]
+		if tag.getText() == "Hexadecimal HTML Entity":
+			tds = tag.find_next_siblings("td")
+			td = tds[len(tds)-1]
+			#if len(nameList) == 0:
+			#	break
+			
+			name = td.contents[0]
+			if ';' in name:
+				name = name.split(';')[0]
 			foundName = True
 
 		if foundName and foundKeyword:
@@ -54,7 +58,7 @@ for link in links:
 	if len(keywords) > 0:
 		keywordsString = keywords[0]
 	else:
-		name = name[1:-1]
+		
 		if emojiDict.get(name.lower()) == None:
 			emojiDict[name.lower()] = [name]
 		else:
@@ -63,7 +67,6 @@ for link in links:
 
 	words = keywordsString.split(", ")
 	
-	name = name[1:-1]
 	print name
 	for word in words:
 		
@@ -73,6 +76,36 @@ for link in links:
 		else:
 			emojiDict[word.lower()].append(name)
 		
+
+
+
+page = requests.get("http://unicode.org/emoji/charts/full-emoji-list.html")
+bs = BeautifulSoup(page.content,"lxml")
+possible_links = bs.find_all('tr')
+for link in possible_links:
+	hex_emoji = "" 
+	possible_code_td = link.find_all('td',{ "class" : "code" })
+	for td in possible_code_td:
+		td.find("a",recursive=False)
+		hex_emoji = td.getText()
+		hex_emoji = str.replace(str(hex_emoji),"U+","&#x").lower()
+		print hex_emoji
+
+	possible_name_td = link.find_all('td',{ "class" : "name" })
+	for td in possible_name_td:
+		td.find("a",recursive=False)
+		name = td.getText()
+		
+		keywords = name.split(", ")
+		for keyword in keywords:
+			if emojiDict.get(keyword.lower()) != None:
+				print "key %s appended %s" %(keyword.lower(),hex_emoji)
+				emojiDict[keyword.lower()].append(hex_emoji)
+			else:
+				print "creating new key %s and item %s" %(name.lower(),hex_emoji)
+				emojiDict[keyword.lower()] = [hex_emoji]
+
+
 
 dataFile = open("emoji.data",'wb')
 pickle.dump(emojiDict,dataFile)
