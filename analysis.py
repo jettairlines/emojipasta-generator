@@ -1,14 +1,12 @@
 import pickle
 import nltk
-from nltk.tokenize import RegexpTokenizer
 from nltk.stem import *
 from nltk.stem.snowball import SnowballStemmer
 
-tokenizer = RegexpTokenizer(r'\w+')
 stemmer = SnowballStemmer("english")
 emojidata = pickle.load( open( "util/emoji_to_keywords.data", "rb" ) )
 for emo,keys in emojidata.items():
-	keys += tokenizer.tokenize( emo.replace("_"," ") )
+	keys += nltk.word_tokenize( emo.replace("_"," ") )
 	keys = [stemmer.stem(e) for e in keys]
 
 # print emojidata.items()
@@ -17,12 +15,12 @@ textinput = "Just like I have the Chinese banks in my buildings, they listen to 
 # textinput = "panda"
 textoutput = textinput
 
-tokens = tokenizer.tokenize(textinput)
-tokens = [stemmer.stem(e) for e in tokens]
+tokens = nltk.word_tokenize(textinput)
+tokens_stem = [stemmer.stem(e) for e in tokens]
 # print tokens
 
 result = {}
-for inputword in tokens:
+for inputword in tokens_stem:
 	result[inputword] = []
 	for emo,keys in emojidata.items():
 		for key in keys:
