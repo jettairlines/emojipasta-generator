@@ -26,10 +26,11 @@ for link in links:
 	page = requests.get(link)
 	bs = BeautifulSoup(page.content,"lxml")
 	possible_tags = bs.find_all('td')
-	print link
 	keywords = ""
 	name = ""
+	hexCode = ""
 	foundName = False
+	foundHex = False
 	foundKeyword = False
 	for tag in possible_tags:
 		if tag.getText() == "Keywords":
@@ -41,19 +42,24 @@ for link in links:
 		if tag.getText() == "Hexadecimal HTML Entity":
 			tds = tag.find_next_siblings("td")
 			td = tds[len(tds)-1]
-			#if len(nameList) == 0:
-			#	break
-			
-			name = td.contents[0]
-			print "emoji unicode %s" %name
-			if name[0:1] != "&":
+			hexCode = td.contents[0]
+			print "emoji unicode %s" %hexCode
+			if hexCode[0:1] != "&":
 				print "skipping"
 				break
-			if ';' in name:
-				name = name.split(';')[0]
-			foundName = True
+			if ';' in hexCode:
+				hexCode = name.split(';')[0]
+			foundHex = True
 
-		if foundName and foundKeyword:
+
+			if tag.getText() == "\"Short Code\" Name":
+				nameList = tag.find_next_siblings("td")[0]
+				if len(nameList) == 0:
+					break
+					name = nameList.contents[0]
+					foundName = True
+
+		if foundHex and foundKeyword:
 			break
 
 	# if len(name) != 0:
@@ -62,23 +68,27 @@ for link in links:
 	if len(keywords) > 0:
 		keywordsString = keywords[0]
 	else:
-		
-		if emojiDict.get(name.lower()) == None:
-			emojiDict[name.lower()] = [name]
-		else:
-			emojiDict[name.lower()].append(name)
-		continue
+		if foundName:
+			name = str(name.encode('utf-8'))
+			str.replace(name,":","")
+			print "get item with no keywords item %s" %name.lower()
+			if emojiDict.get(name.lower()) == None:
+				if foundHex:
+					emojiDict[name.lower()] = [hexCode]
+				else:
+					if foundHex:
+						emojiDict[name.lower()].append(hexCode)
+						continue
 
 	words = keywordsString.split(", ")
 	
-	print name
+	print hexCode
 	for word in words:
 		
-		f.write("%s,%s\n" %(word.encode('utf-8'),name.encode('utf-8')))
 		if emojiDict.get(word) == None:
-			emojiDict[word.lower()] = [name]
+			emojiDict[word.lower()] = [hexCode]
 		else:
-			emojiDict[word.lower()].append(name)
+			emojiDict[word.lower()].append(hexCode)
 		
 
 
