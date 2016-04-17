@@ -45,6 +45,10 @@ for link in links:
 			#	break
 			
 			name = td.contents[0]
+			print "emoji unicode %s" %name
+			if name[0:1] != "&":
+				print "skipping"
+				break
 			if ';' in name:
 				name = name.split(';')[0]
 			foundName = True
