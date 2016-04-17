@@ -4,10 +4,10 @@ import emoji
 from random import randint
 from nltk.stem import *
 from nltk.stem.snowball import SnowballStemmer
-
+from nltk.corpus import wordnet as wn
 ## initializers
 stemmer = SnowballStemmer("english")
-emojidata = pickle.load( open( "util/emoji_to_keywords.data", "rb" ) )
+emojidata = pickle.load( open( "util/emoji.data", "rb" ) )
 for emo,keys in emojidata.items():
 	keys += nltk.word_tokenize( emo.replace("_"," ") )
 	keys = [stemmer.stem(e) for e in keys]
@@ -27,12 +27,20 @@ tokens_stem = [stemmer.stem(e) for e in tokens]
 result = {}
 for i,inputword in enumerate(tokens_stem):
 	result[inputword] = []
-	for emo,keys in emojidata.items():
-		for key in keys:
-			if inputword.lower()==key.lower():
-				tokens.insert(i,makeEmo(emo));
+	print "for word %s" %inputword
+	if emojidata.get(inputword.lower()) != None:
+		tokens.insert(i,makeEmo(emojidata[inputword.lower()][0]))
+	else:
+		syns = wn.synsets(inputword)
+		for syn in syns:
+			
+			name = syn.name().split('.')[0]
+			print "found syn %s" %name
+			if emojidata.get(name.lower()) != None:
+				tokens.insert(i,makeEmo(emojidata[name.lower()][0]))
+				break
 
-# print tokens
+print tokens
 
 textoutput = emoji.emojize(" ".join(tokens))
 # textoutput = "".join( ("<i class='em em-" + str(e) + "'></i>" ) for e in result if result[e])
