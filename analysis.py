@@ -14,19 +14,20 @@ for emo,keys in emojidata.items():
 # print emojidata.items()
 
 textinput = "Just like I have the Chinese banks in my buildings, they listen to me, they respect me. China has almost complete control over North Korea. China will do that. And if they don't do that, they have to suffer economically because we have the engine that makes China work. You know, without the United States or without China sucking out all our money and our jobs China would collapse in about two minutes."
-# textinput = "bank"
+# textinput = "panda"
 
 tokens = tokenizer.tokenize(textinput)
 tokens = [stemmer.stem(e) for e in tokens]
 # print tokens
 
-result = []
+result = {}
 for inputword in tokens:
+	result[inputword] = []
 	for emo,keys in emojidata.items():
-		matches = [ emo for e in keys if e.lower()==inputword.lower() ]
-		if matches:
-			print matches
-			result.append(matches[0])
-# textoutput = "".join( ("<i class='em em-" + str(x) + "'></i>" ) for x in result)
-
+		for key in keys:
+			if inputword.lower()==key.lower():
+				result[inputword].append(emo);
+			
+# textoutput = "".join( ("<i class='em em-" + str(e) + "'></i>" ) for e in result if result[e])
 print result
+# print textoutput
