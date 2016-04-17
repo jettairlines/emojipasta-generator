@@ -24,8 +24,8 @@ result = []
 for inputword in tokens:
 	for emo,keys in emojidata.items():
 		matches = [ emo for e in keys if e.lower()==inputword.lower() ]
-		# print keys
 		if matches:
+			print matches
 			result.append(matches[0])
 # textoutput = "".join( ("<i class='em em-" + str(x) + "'></i>" ) for x in result)
 
