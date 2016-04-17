@@ -40,7 +40,8 @@ def signup():
 	emojilist = []
 	for i,inputword in enumerate(tokens_stem):
 		if emojidata.get(inputword.lower()) != None:
-			tokens.insert(i,emojidata[inputword.lower()][0])
+			emos = emojidata[inputword.lower()]
+			tokens.insert(i,emos[randint(0,len(emos)-1)])
 		else:
 			syns = wn.synsets(inputword)
 			for syn in syns:
