@@ -6,7 +6,6 @@ import emoji
 from random import randint
 from nltk.corpus import wordnet as wn
 from nltk.stem import *
-from nltk.stem.snowball import SnowballStemmer
 application = Flask(__name__)
 
 @application.route("/")
@@ -19,7 +18,7 @@ def signup():
 
 	## initializers
 	stemmer = SnowballStemmer("english")
-	emojidata = pickle.load( open( "util/emoji_to_keywords.data", "rb" ) )
+	emojidata = pickle.load( open( "util/emoji.data", "rb" ) )
 	for emo,keys in emojidata.items():
 		keys += nltk.word_tokenize( emo.replace("_"," ") )
 		keys = [stemmer.stem(e) for e in keys]
@@ -27,10 +26,17 @@ def signup():
 	## util functions
 	def makeEmo(emo):
 		return ":"+emo+":"
+	def ngrams(input, n):
+		output = {}
+		for i in range(len(input)-n+1):
+			g = ' '.join(input[i:i+n])
+			output.setdefault(g, 0)
+			output[g] += 1
+	 	return output
 
 	tokens = nltk.word_tokenize(textinput)
 	tokens_stem = [stemmer.stem(e) for e in tokens]
-	# print tokens
+	ngramz = ngrams(tokens,4).keys()
 
 	emojilist = []
 	for i,inputword in enumerate(tokens_stem):
@@ -47,9 +53,15 @@ def signup():
 						for j in range(0,randint(0,4)): 
 							tokens.insert(i,makeEmo(emo));
 
+
+	## more scrabling and funzies
+	if ngramz and len(textinput)<150:
+		for i,e in enumerate(tokens):
+			if(randint(0,420)>337):
+				tokens.insert(i+randint(0,2),ngramz[randint(0,len(ngramz)-1)])
+
 	if emojilist:
 		emojilist = [makeEmo(e) for e in emojilist]
-		## more scrabling and funzies
 		for i,e in enumerate(tokens):
 			if(randint(0,420)>337):
 				for j in range(0,randint(0,3)):
