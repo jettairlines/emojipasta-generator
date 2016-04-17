@@ -3,8 +3,9 @@ from flask import Flask,request, redirect, render_template, send_from_directory,
 import pickle
 import nltk
 import emoji
-from collections import Counter
 from random import randint
+from nltk.stem.snowball import SnowballStemmer
+from collections import Counter
 from nltk.corpus import wordnet as wn
 from nltk.stem import *
 application = Flask(__name__)
@@ -26,6 +27,8 @@ def signup():
 		keys += nltk.word_tokenize( emo.replace("_"," ") )
 		keys = [stemmer.stem(e) for e in keys]
 
+	print emojidata
+
 
 	## util functions
 	def ngrams(input, n):
@@ -34,7 +37,7 @@ def signup():
 			g = ' '.join(input[i:i+n])
 			output.setdefault(g, 0)
 			output[g] += 1
-	 	return output
+		return output
 
 	tokens = nltk.word_tokenize(textinput)
 	tokens_stem = [stemmer.stem(e) for e in tokens]
@@ -52,11 +55,8 @@ def signup():
 				if emojidata.get(name.lower()) != None:
 					emos = emojidata[name.lower()][:-1]
 					if emos:
-						print emos
 						for emo in emos:
 							if emo not in emojilist: 
-								print "name %s" %name
-								print "emoji %s" %emo
 								emojilist.append(emo)
 						for j in range(0,randint(1,5)): 
 							tokens.insert(i,emos[randint(0,len(emos)-1)]);
@@ -77,8 +77,8 @@ def signup():
 					tokens.insert(i+randint(0,2),emojilist[randint(0,len(emojilist)-1)])
 
 
-   	counts = Counter(emojilist).most_common(7);
-   	counts = [ e[0] for e in counts ]
+	counts = Counter(emojilist).most_common(7);
+	counts = [ e[0] for e in counts ]
 
 	textoutput = " ".join(tokens)
 	counts = " ".join(counts)
