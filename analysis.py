@@ -57,8 +57,6 @@ if emojilist:
 				tokens.insert(i+randint(0,2),emojilist[randint(0,len(emojilist)-1)])
 
 counts = Counter(emojilist).most_common(7);
-print counts[0][0]
-
 
 textoutput = " ".join(tokens)
 emojilist = " ".join(emojilist)

@@ -71,8 +71,7 @@ def signup():
 					tokens.insert(i+randint(0,2),emojilist[randint(0,len(emojilist)-1)])
 
    	counts = Counter(emojilist).most_common(7);
-   	print counts[0][0]
-
+   	counts = [ e[0] for e in counts ]
 
 	textoutput = " ".join(tokens)
 	emojilist = " ".join(emojilist)
