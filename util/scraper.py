@@ -48,14 +48,13 @@ for link in links:
 			break
 
 	# if len(name) != 0:
+	
+	words = []
 	if len(name) == 0:
 		continue
 	if len(keywords) > 0:
 		keywordsString = keywords[0]
-	else:
-		continue
-
-	words = keywordsString.split(", ")
+		words = keywordsString.split(", ")
 	
 	name = name[1:-1]
 	emojiDict[name] = words	
