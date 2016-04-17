@@ -20,15 +20,27 @@ def signup():
 
 	if not textinput: textinput = "@officialjaden How Can Mirrors Be Real If Our Eyes Aren't Real"
 
+
 	## initializers
 	stemmer = SnowballStemmer("english")
 	emojidata = pickle.load( open( "util/emoji.data", "rb" ) )
+	emojidata.pop(u'person',None)
+	emojidata.pop(u'object',None)
+	emojidata.pop(u'place',None)
+	emojidata.pop(u'eyes',None)
+	emojidata.pop(u'hold',None)
+	emojidata.pop(u'no',None)
+	emojidata.pop(u'not',None)
+
 	for emo,keys in emojidata.items():
-		keys += nltk.word_tokenize( emo.replace("_"," ") )
+		emo = stemmer.stem(emo)
 		keys = [stemmer.stem(e) for e in keys]
 
-	print emojidata
+	emojidata[u'eye']=[u'&#x1F440;',u'&#x1F441']
+	emojidata[u'shit']=[u'&#x1F4A9;']
+	emojidata[u'loan']=[u'&#x1F911;',u'&#x1F4B0;',u'&#x1F4B4;',u'&#x1F4B5;',u'&#x1F4B8;']
 
+	# print emojidata
 
 	## util functions
 	def ngrams(input, n):
@@ -53,7 +65,7 @@ def signup():
 			for syn in syns:
 				name = syn.name().split('.')[0]
 				if emojidata.get(name.lower()) != None:
-					emos = emojidata[name.lower()][:-1]
+					emos = emojidata[name.lower()]
 					if emos:
 						for emo in emos:
 							if emo not in emojilist: 
@@ -70,7 +82,7 @@ def signup():
 				tokens.insert(i+randint(0,2),ngramz[randint(0,len(ngramz)-1)])
 
 	if emojilist:
-		prob = (2 if len(tokens)>15 else 6)
+		prob = (2 if len(tokens)>15 else 8)
 		for i,e in enumerate(tokens):
 			if(randint(0,10)<3):
 				for j in range(0,randint(0,3)):
@@ -79,6 +91,7 @@ def signup():
 
 	counts = Counter(emojilist).most_common(7);
 	counts = [ e[0] for e in counts ]
+
 
 	textoutput = " ".join(tokens)
 	counts = " ".join(counts)

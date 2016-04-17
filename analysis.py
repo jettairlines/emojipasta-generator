@@ -13,14 +13,14 @@ textinput = "Just like I have the Chinese banks in my buildings, they listen to 
 stemmer = SnowballStemmer("english")
 emojidata = pickle.load( open( "util/emoji.data", "rb" ) )
 for emo,keys in emojidata.items():
-	keys += nltk.word_tokenize( emo.replace("_"," ") )
 	keys = [stemmer.stem(e) for e in keys]
 
 emojidata.pop(u'person',None)
 emojidata.pop(u'object',None)
 emojidata.pop(u'place',None)
 emojidata.pop(u'eyes',None)
-# emojidata[u'eyes']=["&#x1F440;"]
+emojidata.pop(u'hold',None)
+emojidata[u'eyes']=[u'&#x1F440;',u'&#x1F441']
 
 print emojidata
 
