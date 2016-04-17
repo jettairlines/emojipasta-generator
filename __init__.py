@@ -15,20 +15,26 @@ def hello():
 def signup():
 	textinput = Markup("<p>"+request.form['textinput']+"</p>")
 
+	tokenizer = RegexpTokenizer(r'\w+')
+	stemmer = SnowballStemmer("english")
+	emojidata = pickle.load( open( "util/emoji_to_keywords.data", "rb" ) )
+	for emo,keys in emojidata.items():
+		keys += tokenizer.tokenize( emo.replace("_"," ") )
+		keys = [stemmer.stem(e) for e in keys]
+
 	tokens = tokenizer.tokenize(textinput)
 	tokens = [stemmer.stem(e) for e in tokens]
 	# print tokens
 
-	result = {}
+	result = []
 	for inputword in tokens:
-		result[inputword] = []
 		for emo,keys in emojidata.items():
 			for key in keys:
 				if inputword.lower()==key.lower():
-					result[inputword].append(emo);
+					result.append(emo)
 				
-	textoutput = "".join( ("<i class='em em-" + str(e) + "'></i>" ) for e in result if result[e])
 
+	textoutput = "".join( ("<i class='em em-" + str(x) + "'></i>" ) for x in result)
 	return render_template('index.html', textoutput = Markup(textoutput) )
 
 if __name__ == "__main__":
