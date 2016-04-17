@@ -21,7 +21,6 @@ for linkToScrape in linksToScrape:
 
 print "complete scraping links"
 emojiDict = {}
-f = open("output.txt",'w')
 for link in links:
 	page = requests.get(link)
 	bs = BeautifulSoup(page.content,"lxml")
@@ -59,17 +58,9 @@ for link in links:
 	words = keywordsString.split(", ")
 	
 	name = name[1:-1]
-	print name
-	for word in words:
-		
-		f.write("%s,%s\n" %(word.encode('utf-8'),name.encode('utf-8')))
-		if emojiDict.get(word) == None:
-			emojiDict[word] = [name]
-		else:
-			emojiDict[word].append(name)
-		
+	emojiDict[name] = words	
 
-dataFile = open("emoji.data",'wb')
+dataFile = open("emoji_to_keywords.data",'wb')
 pickle.dump(emojiDict,dataFile)
 dataFile.close()
 
